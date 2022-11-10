@@ -9,12 +9,14 @@ runs:
   steps:
     - name: Install .NET on Windows
       if: runner.os == 'Windows'
+      shell: pwsh
       run: |
         Invoke-WebRequest 'https://dot.net/v1/dotnet-install.ps1' -OutFile 'dotnet-install.ps1'
         ./dotnet-install.ps1 -InstallDir '~/.dotnet' -Channel ${{ inputs.channel }} -SkipNonVersionedFiles
         Add-Content $env:GITHUB_ENV "DOTNET_ROOT=$Env:USERPROFILE\.dotnet"
     - name: Install .NET on Linux/macOS
       if: runner.os != 'Windows'
+      shell: bash
       run: |
         curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin --install-dir ~/.dotnet --channel ${{ inputs.channel }} --skip-non-versioned-files
         echo "DOTNET_ROOT=~/.dotnet" >> "${GITHUB_ENV}"
